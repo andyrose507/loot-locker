@@ -6,6 +6,10 @@ Create Date: 2022-01-11 17:41:17.976220
 from alembic import op
 import sqlalchemy as sa
 
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
+
 
 # revision identifiers, used by Alembic.
 revision = 'a0a65e21f96f'
@@ -24,6 +28,9 @@ def upgrade():
     sa.ForeignKeyConstraint(['item_id'], ['items.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE categories_to_items SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 

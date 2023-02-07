@@ -9,6 +9,10 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
+
 # revision identifiers, used by Alembic.
 revision = "c483df68ec17"
 down_revision = "10dc889f1ea4"
@@ -71,6 +75,9 @@ def upgrade():
         nullable=False,
         existing_server_default=sa.text("now()"),
     )
+
+    if environment == "production":
+        op.execute(f"ALTER TABLE reviews SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
